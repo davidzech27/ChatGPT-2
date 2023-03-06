@@ -16,7 +16,7 @@ const textDecoder = new TextDecoder()
 const NoSSR: FC<{ children: ReactElement }> = ({ children }) => {
 	const [isMounted, setIsMounted] = useState(false)
 
-	useLayoutEffect(() => {
+	;(typeof window === "undefined" ? useEffect : useLayoutEffect)(() => {
 		setIsMounted(true)
 	}, [])
 
@@ -136,6 +136,7 @@ const Home: NextPage = () => {
 			<Head>
 				<title>ChatGPT 2</title>
 			</Head>
+
 			{status === "authenticated" ? (
 				<main
 					className={clsx(
@@ -147,7 +148,7 @@ const Home: NextPage = () => {
 							"env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)",
 					}}
 				>
-					<div className="flex h-screen flex-col px-[10%]">
+					<div className="flex h-screen flex-col px-[10%] pt-[0vh]">
 						<NoSSR>
 							<div
 								className={clsx(
@@ -158,9 +159,9 @@ const Home: NextPage = () => {
 										!navigator.userAgent.includes("DuckDuckGo") &&
 										!navigator.userAgent.includes("FxiOS") &&
 										navigator.userAgent.includes("iPhone")
-										? "h-[16vh]"
+										? "h-[25vh]"
 										: "h-[7vh]",
-									"relative top-[0.25vh] flex items-center justify-center"
+									"flex items-center justify-center"
 								)}
 							>
 								<div
@@ -170,7 +171,18 @@ const Home: NextPage = () => {
 										backgroundClip: "text",
 										color: "transparent",
 									}}
-									className="cursor-default select-none text-xl font-semibold"
+									className={clsx(
+										"relative cursor-default select-none text-center text-[8px] font-semibold md:text-xl",
+										typeof navigator !== "undefined" &&
+											navigator.userAgent.includes("Safari") &&
+											!navigator.userAgent.includes("Chrome") &&
+											!navigator.userAgent.includes("EdgiOS") &&
+											!navigator.userAgent.includes("DuckDuckGo") &&
+											!navigator.userAgent.includes("FxiOS") &&
+											navigator.userAgent.includes("iPhone")
+											? "top-[6vh]"
+											: "top-[0.25vh]"
+									)}
 								>
 									Get faster reponses and avoid school WiFi restrictions with
 									ChatGPT 2

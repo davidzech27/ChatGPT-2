@@ -1,4 +1,5 @@
 import { type NextPage } from "next"
+import { type FC, type ReactElement, useEffect, useLayoutEffect, useState } from "react"
 import Head from "next/head"
 import { Inter } from "next/font/google"
 import clsx from "clsx"
@@ -8,6 +9,16 @@ import { env } from "~/env.mjs"
 const inter = Inter({
 	subsets: ["latin"],
 })
+
+const NoSSR: FC<{ children: ReactElement }> = ({ children }) => {
+	const [isMounted, setIsMounted] = useState(false)
+
+	;(typeof window === "undefined" ? useEffect : useLayoutEffect)(() => {
+		setIsMounted(true)
+	}, [])
+
+	return isMounted ? children : null
+}
 
 const YouMustSignInWithASchoolEmail: NextPage = () => {
 	return (
@@ -26,6 +37,22 @@ const YouMustSignInWithASchoolEmail: NextPage = () => {
 						"env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)",
 				}}
 			>
+				<NoSSR>
+					<div
+						className={
+							typeof navigator !== "undefined" &&
+							navigator.userAgent.includes("Safari") &&
+							!navigator.userAgent.includes("Chrome") &&
+							!navigator.userAgent.includes("EdgiOS") &&
+							!navigator.userAgent.includes("DuckDuckGo") &&
+							!navigator.userAgent.includes("FxiOS") &&
+							navigator.userAgent.includes("iPhone")
+								? "h-[9vh]"
+								: "h-0"
+						}
+					></div>
+				</NoSSR>
+
 				<div
 					onClick={() => signIn("google", { callbackUrl: "/" })}
 					className="cursor-pointer select-none transition-all duration-150 hover:opacity-70 active:opacity-70"
