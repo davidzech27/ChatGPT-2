@@ -29,7 +29,7 @@ const YouMustSignInWithASchoolEmail: NextPage = () => {
 
 			<main
 				className={clsx(
-					"fixed bottom-0 h-screen w-full bg-black text-9xl font-semibold text-white",
+					"fixed bottom-0 h-screen w-full bg-black text-7xl font-semibold text-white md:text-9xl",
 					inter.className
 				)}
 				style={{
@@ -55,7 +55,7 @@ const YouMustSignInWithASchoolEmail: NextPage = () => {
 
 				<div
 					onClick={() => signIn("google", { callbackUrl: "/" })}
-					className="cursor-pointer select-none transition-all duration-150 hover:opacity-70 active:opacity-70"
+					className="cursor-pointer select-none break-words transition-all duration-150 hover:opacity-70 active:opacity-70"
 				>
 					You must sign in with an email address ending with{" "}
 					{env.NEXT_PUBLIC_REQUIRED_EMAIL_ENDING}
