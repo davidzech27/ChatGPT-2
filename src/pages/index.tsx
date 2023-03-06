@@ -268,7 +268,7 @@ const Home: NextPage = () => {
 					</div>
 				</main>
 			) : (
-				<div className="h-screen w-full select-none bg-black"></div>
+				<div className="fixed bottom-0 h-screen w-full bg-black"></div>
 			)}
 		</>
 	)
