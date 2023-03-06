@@ -109,7 +109,7 @@ const Home: NextPage = () => {
 	const messagesRef = useRef<HTMLDivElement>(null)
 
 	const scrollToBottom = () =>
-		messagesRef.current?.scroll({ top: messagesRef.current?.scrollHeight, behavior: "smooth" })
+		messagesRef.current?.scroll({ top: messagesRef.current?.scrollHeight })
 
 	const textInputRef = useRef<HTMLTextAreaElement>(null)
 
