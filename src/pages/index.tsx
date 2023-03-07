@@ -92,7 +92,7 @@ const Home: NextPage = () => {
 			onFinish: () => {
 				setGenerating(false)
 
-				generatingIndex.current += 2
+				process.nextTick(() => (generatingIndex.current += 2))
 			},
 		})
 	}
