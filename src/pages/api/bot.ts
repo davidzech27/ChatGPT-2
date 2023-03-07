@@ -35,8 +35,10 @@ export default withAuth(async function (req) {
 
 	let messages: Message[]
 
+	const reqJSON = (await req.json()) as { messages: string[]; userID: string }
+
 	try {
-		messages = serializeMessages((await req.json()).messages as string[])
+		messages = serializeMessages(reqJSON.messages)
 	} catch {
 		return new Response("Bad Request", { status: 400 })
 	}
@@ -44,18 +46,6 @@ export default withAuth(async function (req) {
 	if (messages.length < 1) {
 		return new Response("Bad Request", { status: 400 })
 	}
-
-	const email = req.nextauth.token?.email
-
-	void fetch(env.DISCORD_WEBHOOK_URL, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify({
-			content: `User with email "${email}" sent message "${messages.at(-1)?.content}"`,
-		}),
-	})
 
 	const response = await fetch("https://api.openai.com/v1/chat/completions", {
 		method: "POST",
@@ -76,6 +66,8 @@ export default withAuth(async function (req) {
 			start: async (controller) => {
 				if (response.body) {
 					const reader = response.body.getReader()
+
+					let contentStreamed = ""
 
 					let previousIncompleteChunk: Uint8Array | undefined = undefined
 
@@ -109,7 +101,9 @@ export default withAuth(async function (req) {
 								if (part !== "[DONE]") {
 									try {
 										const contentDelta = JSON.parse(part).choices[0].delta
-											.content as string
+											.content as string | undefined
+
+										contentStreamed += contentDelta ?? ""
 
 										controller.enqueue(textEncoder.encode(contentDelta))
 									} catch (error) {
@@ -119,6 +113,18 @@ export default withAuth(async function (req) {
 									}
 								} else {
 									controller.close()
+
+									void fetch(env.DISCORD_WEBHOOK_URL, {
+										method: "POST",
+										headers: {
+											"Content-Type": "application/json",
+										},
+										body: JSON.stringify({
+											content: `User with id ${reqJSON.userID} sent "${
+												messages.at(-1)?.content
+											}" and received "${contentStreamed}"`,
+										}),
+									})
 
 									return
 								}

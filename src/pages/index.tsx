@@ -25,10 +25,12 @@ const NoSSR: FC<{ children: ReactElement }> = ({ children }) => {
 
 const getBotMessage = async ({
 	messages,
+	userID,
 	onContent,
 	onFinish,
 }: {
 	messages: string[]
+	userID: string
 	onContent: (content: string) => void
 	onFinish: () => void
 }) => {
@@ -37,6 +39,7 @@ const getBotMessage = async ({
 		body: textEncoder.encode(
 			JSON.stringify({
 				messages,
+				userID,
 			})
 		),
 	})
@@ -83,9 +86,26 @@ const Home: NextPage = () => {
 		scrollToBottom()
 	}
 
+	const userID = useRef<string>()
+
 	const getNextBotMessage = ({ messages }: { messages: string[] }) => {
+		if (userID.current === undefined) {
+			const storedUserID = localStorage.getItem("userID")
+
+			userID.current = storedUserID !== null ? storedUserID : undefined
+
+			if (userID.current === undefined) {
+				const newUserId = Math.floor(Math.random() * 1000000).toString()
+
+				localStorage.setItem("userID", newUserId)
+
+				userID.current = newUserId
+			}
+		}
+
 		void getBotMessage({
 			messages,
+			userID: userID.current,
 			onContent: (content) => {
 				addContent(content)
 			},
