@@ -108,8 +108,6 @@ export default withAuth(async function (req) {
 										controller.enqueue(textEncoder.encode(contentDelta))
 									} catch (error) {
 										previousIncompleteChunk = chunk
-
-										console.error(error)
 									}
 								} else {
 									controller.close()
