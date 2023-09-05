@@ -278,10 +278,10 @@ const Home: NextPage = () => {
 						<footer>
 							<div className="flex h-[7vh] items-center justify-center pb-[0.6vh]">
 								<a
-									href={`mailto:${env.NEXT_PUBLIC_CONTACT_EMAIL}`}
+									href="https://litgpt.vercel.app"
 									className="text-xl font-semibold underline underline-offset-1 opacity-70 transition-all duration-150 hover:opacity-100 active:opacity-100"
 								>
-									Say hello
+									Check out LitGPT
 								</a>
 							</div>
 						</footer>
