@@ -21,7 +21,9 @@ export const authOptions: NextAuthOptions = {
 		signIn: ({ user }) => {
 			void webhookClient.send(`User with email "${user.email}" signing up`)
 
-			if (!user.email?.endsWith(env.NEXT_PUBLIC_REQUIRED_EMAIL_ENDING)) {
+			const emailDomain = user.email?.split(".").at(-1)
+
+			if (emailDomain !== "net" && emailDomain !== "org" && emailDomain !== "edu") {
 				return "/YouMustSignInWithASchoolEmail"
 			}
 

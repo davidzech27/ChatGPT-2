@@ -57,8 +57,7 @@ const YouMustSignInWithASchoolEmail: NextPage = () => {
 					onClick={() => signIn("google", { callbackUrl: "/" })}
 					className="cursor-pointer select-none break-words transition-all duration-150 hover:opacity-70 active:opacity-70"
 				>
-					You must sign in with an email address ending with{" "}
-					{env.NEXT_PUBLIC_REQUIRED_EMAIL_ENDING}
+					You must sign in with an email address ending with .edu, .org, or .net{" "}
 				</div>
 			</main>
 		</>

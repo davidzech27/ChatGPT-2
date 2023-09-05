@@ -4,7 +4,6 @@ import { useState, useEffect, useRef, useLayoutEffect, FC, ReactElement } from "
 import { Inter } from "next/font/google"
 import clsx from "clsx"
 import { signIn, useSession } from "next-auth/react"
-import { env } from "~/env.mjs"
 
 const inter = Inter({
 	subsets: ["latin"],
@@ -64,7 +63,7 @@ const getBotMessage = async ({
 }
 
 const Home: NextPage = () => {
-	const { data: session, status } = useSession({
+	const { status } = useSession({
 		required: true,
 		onUnauthenticated: () => signIn("google"),
 	})
